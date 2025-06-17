@@ -1,6 +1,0 @@
-CREATE DATABASE itr;
-
-
-
-
-

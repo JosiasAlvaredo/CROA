@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/personas.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header id="header"></header>
+
+    <main>
+      
+      <section class="container">
+        <div id="app">
+          <!-- Botón Nuevo (Azul) -->
+
+          <section v-if="error">Lo sentimos se produjo un error</section>
+          <section v-else>
+            <section v-if="cargando">
+              <div class="spinner-border"></div>
+              <p>Cargando .....</p>
+            </section>
+            <section v-else>
+              <div>
+                <table class="tabla">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre del Equipo</th>
+                      <th>Deporte</th>
+                      <th>Categoría</th>
+                      <th>Puntaje</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template v-for="equipo in equipos">
+                      <tr>
+                        <td>{{ equipo.id }}</td>
+                        <td>{{ equipo.nombre }}</td>
+                        <td>{{ equipo.deporte }}</td>
+                        <td>{{ equipo.categoria }}</td>
+                        <td>{{ equipo.puntaje }}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="5">
+                          <table v-if="equipo.invitados && equipo.invitados.length">
+                            <thead>
+                              <tr>
+                                <th>DNI</th>
+                                <th>Nombre</th>
+                                <th>Dieta</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr v-for="inv in equipo.invitados">
+                                <td>{{ inv.dni }}</td>
+                                <td>{{ inv.nombre_apellido }}</td>
+                                <td>{{ inv.dieta }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p v-else>Sin invitados</p>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+          
+
+          <h2>Agregar Invitado a un Equipo</h2>
+          <form @submit.prevent="agregarInvitado">
+            <select v-model="nuevoInvitado.id_equipo" required>
+              <option disabled value="">Seleccioná un equipo</option>
+              <option v-for="equipo in equipos" :value="equipo.id">{{ equipo.nombre }}</option>
+            </select><br/>
+            <input type="number" v-model.number="nuevoInvitado.dni" placeholder="Dni" required><br/>
+            <input v-model="nuevoInvitado.nombre_apellido" placeholder="Nombre y Apellido" required><br/>
+            <input v-model="nuevoInvitado.dieta" placeholder="Dieta" required><br/>
+            <button type="submit">Agregar Invitado</button><br/>
+          </form>
+
+          <h2>Agregar Nuevo Equipo</h2>
+              <form @submit.prevent="agregarEquipo">
+                <input v-model="nuevoEquipo.nombre" placeholder="Nombre del equipo" required><br/>
+                <input v-model="nuevoEquipo.deporte" placeholder="Deporte" required><br/>
+                <input v-model="nuevoEquipo.categoria" placeholder="Categoría" required><br/>
+                <input type="number" v-model.number="nuevoEquipo.puntaje" placeholder="Puntaje" required><br/>
+                <button type="submit">Agregar Equipo</button><br/>
+              </form>
+        </div>
+        
+      </section>
+    </main>
+
+    <footer></footer>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script src="../js/equipos.js"></script>
+    <script src="../js/header.js"></script>
+  </body>
+</html>

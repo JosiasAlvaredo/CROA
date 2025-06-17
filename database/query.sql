@@ -1,24 +1,23 @@
 CREATE DATABASE IF NOT EXISTS `app_renault`;
 USE `app_renault`;
-CREATE TABLE IF NOT EXISTS `invitados`(
-    `dni` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `id_equipo` BIGINT,
-    `nombre_apellido` VARCHAR(255) NOT NULL,
-    `dieta` VARCHAR(255) NOT NULL
-);
 CREATE TABLE IF NOT EXISTS `equipos`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `nombre` VARCHAR(255) NOT NULL,
     `categoria` VARCHAR(255) NOT NULL,
-    `responsable_1_id` BIGINT NOT NULL,
+    `responsable_1_id` BIGINT,
     `responsable_2_id` BIGINT,
     `deporte` VARCHAR(255) NOT NULL,
-    `puntaje` BIGINT NOT NULL,
-    FOREIGN KEY (`responsable_1_id`) REFERENCES `invitados` (`dni`),
-    FOREIGN KEY (`responsable_2_id`) REFERENCES `invitados` (`dni`)
+    `puntaje` BIGINT NOT NULL
 );
-ALTER TABLE `invitados`
-ADD FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id`);
+
+CREATE TABLE IF NOT EXISTS `invitados`(
+    `dni` BIGINT NOT NULL PRIMARY KEY,
+    `id_equipo` BIGINT,
+    `nombre_apellido` VARCHAR(255) NOT NULL,
+    `dieta` VARCHAR(255),
+    FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS `opciones_cantina`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `nombre` VARCHAR(255) NOT NULL,
@@ -58,4 +57,5 @@ CREATE TABLE IF NOT EXISTS `sponsors`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
 );
 
-DESC `equipos`;
+SELECT * FROM `equipos`;
+SELECT * FROM `invitados`;
