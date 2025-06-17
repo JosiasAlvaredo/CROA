@@ -10,12 +10,10 @@ CREATE TABLE IF NOT EXISTS `equipos`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `nombre` VARCHAR(255) NOT NULL,
     `categoria` VARCHAR(255) NOT NULL,
-    `responsable_1_id` BIGINT NOT NULL,
+    `responsable_1_id` BIGINT,
     `responsable_2_id` BIGINT,
     `deporte` VARCHAR(255) NOT NULL,
-    `puntaje` BIGINT NOT NULL,
-    FOREIGN KEY (`responsable_1_id`) REFERENCES `invitados` (`dni`),
-    FOREIGN KEY (`responsable_2_id`) REFERENCES `invitados` (`dni`)
+    `puntaje` BIGINT NOT NULL
 );
 ALTER TABLE `invitados`
 ADD FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id`);
