@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)
 
 # Configuración de base de datos (RECORDAR CAMBIAR USUARIO, CONTRASEÑA Y NOMBRE DE LA DB SEGUN SEA NECESARIO)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/app_renault'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:461315@localhost:3306/app_renault'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Inicializar SQLAlchemy
@@ -28,16 +28,19 @@ class Invitado(db.Model):
 
 class Equipo(db.Model):
     __tablename__ = 'equipos'
-    
+
     id = db.Column(db.BigInteger, primary_key=True)
     nombre = db.Column(db.String(255), nullable=False)
     categoria = db.Column(db.String(255), nullable=False)
-    responsable_1_id = db.Column(db.BigInteger, nullable=True, default=None)
-    responsable_2_id = db.Column(db.BigInteger, nullable=True, default=None)
+    responsable_1_id = db.Column(db.BigInteger, db.ForeignKey('invitados.dni'), nullable=True)
+    responsable_2_id = db.Column(db.BigInteger, db.ForeignKey('invitados.dni'), nullable=True)
     deporte = db.Column(db.String(255), nullable=False)
     puntaje = db.Column(db.BigInteger, nullable=False)
+    
+    invitados = db.relationship('Invitado', backref='equipo', lazy=True, foreign_keys='Invitado.id_equipo')
 
-    invitados = db.relationship('Invitado', backref='equipo', lazy=True)
+    responsable_1 = db.relationship('Invitado', foreign_keys=[responsable_1_id], backref='equipos_como_responsable1')
+    responsable_2 = db.relationship('Invitado', foreign_keys=[responsable_2_id], backref='equipos_como_responsable2')
 
 
 # Crear tablas si no existen
@@ -105,9 +108,15 @@ def equipos_registro():
             "categoria": e.categoria,
             "deporte": e.deporte,
             "puntaje": e.puntaje,
-            "invitados": [{"dni": i.dni, "nombre_apellido": i.nombre_apellido, "dieta": i.dieta} for i in getattr(e, "invitados", [])],
-            "responsable_1_id": e.responsable_1_id,
-            "responsable_2_id": e.responsable_2_id
+            "responsable_1": e.responsable_1.nombre_apellido if e.responsable_1 else None,
+            "responsable_2": e.responsable_2.nombre_apellido if e.responsable_2 else None,
+            "invitados": [
+                {
+                    "dni": i.dni,
+                    "nombre_apellido": i.nombre_apellido,
+                    "dieta": i.dieta
+                } for i in e.invitados
+            ]
         }
         data.append(equipo_data)
     return jsonify(data)
@@ -143,7 +152,6 @@ def nuevo_invitado():
     db.session.add(nuevo)
     db.session.commit()
     return jsonify({"mensaje": "Invitado creado correctamente"})
-
 
 if __name__ == "__main__":
     app.run(debug=True)
