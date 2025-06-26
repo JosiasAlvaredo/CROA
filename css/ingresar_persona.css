@@ -3,9 +3,11 @@
     padding: 0%;
 }
 
-.container-form{
-    background: radial-gradient(circle, #ffcccc, #ff9999);
-    height: 100vh;
+.container{
+    background-image: url('../imagenes/fondo_deporte.png');
+    background-size: cover;  
+    background-repeat: no-repeat;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
